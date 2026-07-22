@@ -6,6 +6,6 @@ class BaseAPI(ABC):
     """Абстрактный базовый класс для работы с API."""
 
     @abstractmethod
-    def get_aeroplanes(self, country: str) -> list[dict[str, Any]]:
+    def get_aeroplanes(self, country: str) -> list[dict[str, Any]] | None:
         """Получает информацию о самолётах по названию страны."""
         pass
