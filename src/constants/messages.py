@@ -8,3 +8,4 @@ class ApiMsg:  # Сообщения для API
 
 class ErrorMsg:  # Сообщения об ошибках
     COMPARE_ERR = "Сравнивать можно только объекты Aeroplane"
+    READ_ERR = "Ошибка чтения файла: {e}"
