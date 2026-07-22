@@ -4,5 +4,6 @@ class ApiMsg:  # Сообщения для API
     PLANES_NF = "В воздушном пространстве '{country}' самолёты не найдены."  # NO_AEROPLANES_FOUND
     PLANES_OK = "Успешно получены данные о самолётах для '{country}'."  # SUCCESS_AEROPLANES
 
+
 class ErrorMsg:  # Сообщения об ошибках
     COMPARE_ERR = "Сравнивать можно только объекты Aeroplane"
