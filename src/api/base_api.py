@@ -1,0 +1,11 @@
+from abc import ABC, abstractmethod
+from typing import Any
+
+
+class BaseAPI(ABC):
+    """Абстрактный базовый класс для работы с API."""
+
+    @abstractmethod
+    def get_aeroplanes(self, country: str) -> list[dict[str, Any]]:
+        """Получает информацию о самолётах по названию страны."""
+        pass

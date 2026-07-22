@@ -1,0 +1,42 @@
+[project]
+name = "sky-tracker"
+version = "0.1.0"
+description = "Трекер самолётов в воздушном пространстве по странам через API (OpenSky и Nominatim)"
+authors = [
+    {name = "Yulianna-Aleeva",email = "89673838388@mail.ru"}
+]
+requires-python = ">=3.10"
+dependencies = [
+    "dotenv (>=0.9.9,<0.10.0)",
+    "requests (>=2.34.2,<3.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.black]
+target-version = ["py310"]
+line-length = 119
+exclude = ".git/|.venv"
+
+
+[tool.isort]
+profile = "black"
+float_to_top = true
+combine_as_imports = true
+
+
+[tool.flake8]
+max-line-length = 119
+exclude = [".git", ".venv", "__pycache__", "venv", "env", ".mypy_cache", ".pytest_cache"]
+
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+exclude = ["venv"]

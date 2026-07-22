@@ -1,0 +1,2 @@
+2026-07-21 23:19:21,659 src.api.api_adapter ERROR   : Ошибка при запросе к API: https://nominatim.openstreetmap.org/search: HTTPSConnectionPool(host='nominatim.openstreetmap.org', port=443): Read timed out. (read timeout=8)
+2026-07-21 23:19:21,990 src.api.api_adapter INFO    : Успешно получены данные о самолётах для 'Russia - Moscow'.
