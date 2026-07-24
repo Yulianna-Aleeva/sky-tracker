@@ -1,7 +1,9 @@
 import os
 
-from flask import Flask, render_template, request
 from dotenv import load_dotenv
+from flask import Flask, render_template, request
+from flask.typing import ResponseReturnValue
+
 from src.api.api_adapter import ApiAdapter
 from src.classes.aeroplane import Aeroplane
 from src.config import USER_SETTINGS
@@ -23,13 +25,13 @@ def _load_planes(country: str) -> list[Aeroplane]:
 
 
 @app.route("/", methods=["GET"])
-def index() -> str:
+def index() -> ResponseReturnValue:
     """Главная: форма выбора страны."""
     return render_template("index.html", countries=USER_SETTINGS.get("user_countries", []))
 
 
 @app.route("/planes", methods=["POST"])
-def planes() -> str:
+def planes() -> ResponseReturnValue:
     """Список самолётов по выбранной или введённой стране."""
     country = request.form.get("country", "").strip()
     if country == "__custom__":
@@ -39,7 +41,7 @@ def planes() -> str:
 
 
 @app.route("/planes_back", methods=["GET"])
-def planes_back() -> str:
+def planes_back() -> ResponseReturnValue:
     """Возврат к списку самолётов по country из query."""
     country = request.args.get("country", "").strip()
     planes = _load_planes(country)
@@ -47,7 +49,7 @@ def planes_back() -> str:
 
 
 @app.route("/leaders", methods=["GET"])
-def leaders() -> str:
+def leaders() -> ResponseReturnValue:
     """Топ-лидеры: быстрый / высокий / крутой."""
     country = request.args.get("country", "").strip()
     planes = _load_planes(country)
@@ -62,7 +64,7 @@ def leaders() -> str:
 
 
 @app.route("/filter", methods=["GET"])
-def filter_country() -> str:
+def filter_country() -> ResponseReturnValue:
     """Фильтр самолётов по стране регистрации (origin_country)."""
     country = request.args.get("country", "").strip()
     reg = request.args.get("reg", "").strip()
@@ -70,10 +72,7 @@ def filter_country() -> str:
 
     filtered = None
     if reg:
-        filtered = [
-            p for p in planes
-            if p.origin_country and p.origin_country.lower() == reg.lower()
-        ]
+        filtered = [p for p in planes if p.origin_country and p.origin_country.lower() == reg.lower()]
 
     return render_template(
         "filter.html",
@@ -84,7 +83,7 @@ def filter_country() -> str:
 
 
 @app.route("/top-altitude", methods=["GET"])
-def top_altitude() -> str:
+def top_altitude() -> ResponseReturnValue:
     """Топ-N самолётов по высоте (DESC)."""
     country = request.args.get("country", "").strip()
     n = request.args.get("n", type=int)
@@ -102,7 +101,7 @@ def top_altitude() -> str:
 
 
 @app.route("/top-velocity", methods=["GET"])
-def top_velocity() -> str:
+def top_velocity() -> ResponseReturnValue:
     """Топ-N самолётов по скорости (DESC)."""
     country = request.args.get("country", "").strip()
     n = request.args.get("n", type=int)
@@ -120,7 +119,7 @@ def top_velocity() -> str:
 
 
 @app.route("/stats/<mode>", methods=["GET"])
-def stats(mode: str) -> str:
+def stats(mode: str) -> ResponseReturnValue:
     """Статистика: in_air / on_ground / spi."""
     country = request.args.get("country", "").strip()
     planes = _load_planes(country)

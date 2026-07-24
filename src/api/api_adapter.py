@@ -85,8 +85,7 @@ class ApiAdapter(BaseAPI):
         }
 
         # Авторизация OpenSky (если задана в .env)
-        auth = (OPENSKY_USER, OPENSKY_PASS) if OPENSKY_USER else None
-
+        auth = (OPENSKY_USER, OPENSKY_PASS) if OPENSKY_USER and OPENSKY_PASS else None
         try:
             # Запрос к OpenSky API с координатами
             response = requests.get(
