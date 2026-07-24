@@ -3,11 +3,23 @@
 {% block content %}
 <h2>Выберите страну</h2>
 <form action="{{ url_for('planes') }}" method="post">
-    <select name="country" required>
+    <select name="country" id="country-select" required onchange="toggleCustom()">
         {% for c in countries %}
             <option value="{{ c }}">{{ c }}</option>
         {% endfor %}
+        <option value="__custom__">✏ Свой ввод</option>
     </select>
+
+    <input type="text" name="custom_country" id="custom-input" placeholder="Введите страну" style="display:none;">
+
     <button type="submit">Показать самолёты</button>
 </form>
+
+<script>
+    function toggleCustom() {
+        const select = document.getElementById("country-select");
+        const input = document.getElementById("custom-input");
+        input.style.display = select.value === "__custom__" ? "inline-block" : "none";
+    }
+</script>
 {% endblock %}

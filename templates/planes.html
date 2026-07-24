@@ -5,6 +5,18 @@
 
 {% if planes %}
 <p>Найдено: {{ planes|length }}</p>
+
+<nav class="menu">
+    <a href="{{ url_for('index') }}">Другая страна</a>
+    <a href="#">Фильтр по стране вылета</a>
+    <a href="{{ url_for('leaders', country=country) }}">Топ-лидеры</a>
+    <a href="#">Топ-N по высоте</a>
+    <a href="#">Топ-N по скорости</a>
+    <a href="#">В воздухе</a>
+    <a href="#">На земле</a>
+    <a href="#">Спецрейсы (SPI)</a>
+</nav>
+
 <table>
     <thead>
         <tr>
@@ -31,5 +43,5 @@
 <p>Нет данных.</p>
 {% endif %}
 
-<p><a href="{{ url_for('index') }}">← Назад</a></p>
+<p><a href="{{ url_for('index') }}">← На главную</a></p>
 {% endblock %}

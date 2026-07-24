@@ -24,6 +24,10 @@ main {
     padding: 0 1rem;
 }
 
+h2, h3 {
+    color: #e2e8f0;
+}
+
 select, button {
     padding: 0.5rem 1rem;
     font-size: 1rem;
@@ -61,4 +65,58 @@ th {
 
 a {
     color: #38bdf8;
+}
+
+.menu {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1rem 0;
+}
+
+.menu a {
+    background: #1e293b;
+    padding: 0.5rem 0.9rem;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #38bdf8;
+    font-size: 0.9rem;
+}
+
+.menu a:hover {
+    background: #38bdf8;
+    color: #0f172a;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.card {
+    background: #1e293b;
+    padding: 1rem 1.2rem;
+    border-radius: 8px;
+    border-left: 4px solid #38bdf8;
+}
+
+.card h3 {
+    margin-top: 0;
+    color: #38bdf8;
+}
+
+input[type="text"] {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border-radius: 6px;
+    border: 1px solid #334155;
+    background: #1e293b;
+    color: #e2e8f0;
+    margin-right: 0.5rem;
+}
+
+input[type="text"]::placeholder {
+    color: #64748b;
 }
