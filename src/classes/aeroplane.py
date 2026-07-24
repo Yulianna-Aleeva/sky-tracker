@@ -1,6 +1,6 @@
 from typing import Any
 
-from src.constants.messages import ErrorMsg
+from src.constants.messages import Msg
 from src.utils.validators import to_clean_str, to_float_or_none, to_int_or_none
 
 
@@ -117,7 +117,7 @@ class Aeroplane:
     def __lt__(self, other: "Aeroplane") -> bool:
         """Сравнение по высоте, если одинаково - по скорости."""
         if not isinstance(other, Aeroplane):
-            raise TypeError(ErrorMsg.COMPARE_ERR)
+            raise TypeError(Msg.COMPARE_ERR)
         return (self._num_key(self.baro_altitude), self._num_key(self.velocity)) < (
             self._num_key(other.baro_altitude),
             self._num_key(other.velocity),

@@ -4,7 +4,7 @@ from typing import Any
 
 from src.classes.aeroplane import Aeroplane
 from src.config import FILE_PATH, get_logger
-from src.constants.messages import ErrorMsg
+from src.constants.messages import Msg
 from src.storage.base_saver import BaseSaver
 
 logger = get_logger(__name__)
@@ -29,7 +29,7 @@ class JSONSaver(BaseSaver):
                 return data
 
         except (FileNotFoundError, json.JSONDecodeError) as e:
-            logger.error(ErrorMsg.READ_ERR.format(e=e))
+            logger.error(Msg.READ_ERR.format(e=e))
             return []
 
     def _write(self, data: list[dict[str, Any]]) -> None:
