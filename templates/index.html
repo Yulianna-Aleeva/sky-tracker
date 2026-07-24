@@ -2,24 +2,25 @@
 
 {% block content %}
 <h2>Выберите страну</h2>
-<form action="{{ url_for('planes') }}" method="post">
-    <select name="country" id="country-select" required onchange="toggleCustom()">
-        {% for c in countries %}
-            <option value="{{ c }}">{{ c }}</option>
-        {% endfor %}
-        <option value="__custom__">✏ Свой ввод</option>
-    </select>
 
-    <input type="text" name="custom_country" id="custom-input" placeholder="Введите страну" style="display:none;">
+<div class="cards">
+    <div class="card">
+        <h3>✏ Свой ввод</h3>
+        <form action="{{ url_for('planes') }}" method="post">
+            <input type="hidden" name="country" value="__custom__">
+            <input type="text" name="custom_country" placeholder="Например: Germany" required>
+            <button type="submit">Показать</button>
+        </form>
+    </div>
 
-    <button type="submit">Показать самолёты</button>
-</form>
-
-<script>
-    function toggleCustom() {
-        const select = document.getElementById("country-select");
-        const input = document.getElementById("custom-input");
-        input.style.display = select.value === "__custom__" ? "inline-block" : "none";
-    }
-</script>
+    {% for c in countries %}
+    <div class="card">
+        <h3>{{ c }}</h3>
+        <form action="{{ url_for('planes') }}" method="post">
+            <input type="hidden" name="country" value="{{ c }}">
+            <button type="submit">Показать</button>
+        </form>
+    </div>
+    {% endfor %}
+</div>
 {% endblock %}

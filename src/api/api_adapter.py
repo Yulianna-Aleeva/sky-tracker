@@ -2,6 +2,12 @@ import os
 from typing import Any, cast
 
 import requests
+from tenacity import (
+    retry,
+    retry_if_exception_type,
+    stop_after_attempt,
+    wait_exponential_jitter,
+)
 
 from src.api.base_api import BaseAPI
 from src.config import USER_SETTINGS, get_logger
@@ -67,6 +73,12 @@ class ApiAdapter(BaseAPI):
             logger.error(f"{Msg.REQ_ERR.format(url=self.geo_url)}: {e}")
             return self._get_saved_coords(country)
 
+    @retry(
+        stop=stop_after_attempt(3),
+        wait=wait_exponential_jitter(initial=1, max=5, jitter=1),
+        retry=retry_if_exception_type(requests.RequestException),
+        reraise=True,
+    )
     def get_aeroplanes(self, country: str) -> list[Any] | None:
         """Получает список самолётов в воздушном пространстве страны."""
         # Узнаём координаты страны
@@ -114,7 +126,7 @@ class ApiAdapter(BaseAPI):
             logger.info(Msg.PLANES_OK.format(country=country))
             return planes
 
-        # Если OpenSky API недоступно
+        # Если OpenSky API недоступно — пробрасываем, чтобы сработал retry
         except requests.RequestException as e:
             logger.error(f"{Msg.REQ_ERR.format(url=self.sky_url)}: {e}")
-            return None
+            raise

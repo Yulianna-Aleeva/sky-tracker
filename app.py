@@ -1,5 +1,6 @@
 import os
 
+import requests
 from dotenv import load_dotenv
 from flask import Flask, render_template, request
 from flask.typing import ResponseReturnValue
@@ -18,9 +19,11 @@ OPENSKY_PASS = os.getenv("OPENSKY_PASS")
 
 
 def _load_planes(country: str) -> list[Aeroplane]:
-    """Загружает самолёты по стране через API."""
-    raw = api.get_aeroplanes(country) or []
-    # Если API требует авторизацию, нужно обновить ApiAdapter
+    """Загружает самолёты по стране через API (с retry)."""
+    try:
+        raw = api.get_aeroplanes(country) or []
+    except requests.RequestException:
+        raw = []
     return Aeroplane.cast_to_object_list(raw)
 
 

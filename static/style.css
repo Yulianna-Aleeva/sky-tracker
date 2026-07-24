@@ -131,3 +131,13 @@ input[type="number"] {
     margin-right: 0.5rem;
     width: 120px;
 }
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.home-link {
+    font-size: 0.9rem;
+}
