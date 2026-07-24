@@ -1,3 +1,4 @@
+import os
 from typing import Any, cast
 
 import requests
@@ -7,6 +8,9 @@ from src.config import USER_SETTINGS, get_logger
 from src.constants.messages import Msg
 
 logger = get_logger(__name__)
+
+OPENSKY_USER = os.getenv("OPENSKY_USER")
+OPENSKY_PASS = os.getenv("OPENSKY_PASS")
 
 
 class ApiAdapter(BaseAPI):
@@ -34,7 +38,7 @@ class ApiAdapter(BaseAPI):
         return self._to_bbox(save_coords)
 
     def _get_coordinates(self, country: str) -> list[float] | None:
-        """Получает координаты (bounding box) страны."""
+        """Получает координаты (bounding box) страны через Nominatim."""
         # Если координаты не найдены, логируем предупреждение и возвращаем сохранённые координаты
         if not self.geo_url:
             logger.warning(Msg.COORD_NF.format(country=country))
@@ -80,9 +84,18 @@ class ApiAdapter(BaseAPI):
             "lomax": max_lon,  # восток
         }
 
+        # Авторизация OpenSky (если задана в .env)
+        auth = (OPENSKY_USER, OPENSKY_PASS) if OPENSKY_USER else None
+
         try:
             # Запрос к OpenSky API с координатами
-            response = requests.get(self.sky_url, params=params, timeout=10)
+            response = requests.get(
+                self.sky_url,
+                params=params,
+                headers=self.headers,
+                timeout=10,
+                auth=auth,
+            )
             response.raise_for_status()
             data = response.json()
 

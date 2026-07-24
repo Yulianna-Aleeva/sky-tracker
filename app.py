@@ -1,5 +1,7 @@
-from flask import Flask, render_template, request
+import os
 
+from flask import Flask, render_template, request
+from dotenv import load_dotenv
 from src.api.api_adapter import ApiAdapter
 from src.classes.aeroplane import Aeroplane
 from src.config import USER_SETTINGS
@@ -7,10 +9,16 @@ from src.config import USER_SETTINGS
 app = Flask(__name__)
 api = ApiAdapter()
 
+load_dotenv()
+
+OPENSKY_USER = os.getenv("OPENSKY_USER")
+OPENSKY_PASS = os.getenv("OPENSKY_PASS")
+
 
 def _load_planes(country: str) -> list[Aeroplane]:
     """Загружает самолёты по стране через API."""
     raw = api.get_aeroplanes(country) or []
+    # Если API требует авторизацию, нужно обновить ApiAdapter
     return Aeroplane.cast_to_object_list(raw)
 
 
