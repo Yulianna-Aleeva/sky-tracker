@@ -1,2 +1,9 @@
-2026-07-21 23:19:21,659 src.api.api_adapter ERROR   : Ошибка при запросе к API: https://nominatim.openstreetmap.org/search: HTTPSConnectionPool(host='nominatim.openstreetmap.org', port=443): Read timed out. (read timeout=8)
-2026-07-21 23:19:21,990 src.api.api_adapter INFO    : Успешно получены данные о самолётах для 'Russia - Moscow'.
+2026-07-24 12:18:04,816 src.api.api_adapter WARNING : Координаты для страны Unknown не найдены.
+2026-07-24 12:18:04,820 src.api.api_adapter ERROR   : Ошибка при запросе к API: https://nominatim.openstreetmap.org/search.: timeout
+2026-07-24 12:18:04,822 src.api.api_adapter WARNING : Координаты для страны Italy не найдены.
+2026-07-24 12:18:04,829 src.api.api_adapter INFO    : Успешно получены данные о самолётах для Testland.
+2026-07-24 12:18:04,832 src.api.api_adapter WARNING : Координаты для страны Nowhere не найдены.
+2026-07-24 12:18:04,835 src.api.api_adapter WARNING : В воздушном пространстве Testland самолёты не найдены.
+2026-07-24 12:18:04,838 src.api.api_adapter WARNING : Ошибка ответа API для Testland.
+2026-07-24 12:18:04,841 src.api.api_adapter ERROR   : Ошибка при запросе к API: https://opensky-network.org/api/states/all.: timeout
+2026-07-24 12:18:04,844 src.api.api_adapter INFO    : Успешно получены данные о самолётах для Testland.
