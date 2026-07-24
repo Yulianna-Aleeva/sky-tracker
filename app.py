@@ -53,5 +53,63 @@ def leaders() -> str:
     return render_template("leaders.html", country=country, leaders=leaders_data)
 
 
+@app.route("/filter", methods=["GET"])
+def filter_country() -> str:
+    """Фильтр самолётов по стране регистрации (origin_country)."""
+    country = request.args.get("country", "").strip()
+    reg = request.args.get("reg", "").strip()
+    planes = _load_planes(country)
+
+    filtered = None
+    if reg:
+        filtered = [
+            p for p in planes
+            if p.origin_country and p.origin_country.lower() == reg.lower()
+        ]
+
+    return render_template(
+        "filter.html",
+        country=country,
+        reg=reg,
+        planes=filtered,
+    )
+
+
+@app.route("/top-altitude", methods=["GET"])
+def top_altitude() -> str:
+    """Топ-N самолётов по высоте (DESC)."""
+    country = request.args.get("country", "").strip()
+    n = request.args.get("n", type=int)
+    planes = _load_planes(country)
+
+    top = None
+    if n and n > 0:
+        top = sorted(
+            planes,
+            key=lambda p: p.baro_altitude if p.baro_altitude is not None else -1,
+            reverse=True,
+        )[:n]
+
+    return render_template("top.html", country=country, n=n, planes=top, mode="altitude")
+
+
+@app.route("/top-velocity", methods=["GET"])
+def top_velocity() -> str:
+    """Топ-N самолётов по скорости (DESC)."""
+    country = request.args.get("country", "").strip()
+    n = request.args.get("n", type=int)
+    planes = _load_planes(country)
+
+    top = None
+    if n and n > 0:
+        top = sorted(
+            planes,
+            key=lambda p: p.velocity if p.velocity is not None else -1,
+            reverse=True,
+        )[:n]
+
+    return render_template("top.html", country=country, n=n, planes=top, mode="velocity")
+
+
 if __name__ == "__main__":
     app.run(debug=True)

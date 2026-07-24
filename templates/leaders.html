@@ -2,6 +2,7 @@
 
 {% block content %}
 <h2>Топ-лидеры: {{ country }}</h2>
+<p><a href="{{ url_for('planes_back', country=country) }}">← К списку самолётов</a></p>
 
 {% if leaders %}
 <div class="cards">

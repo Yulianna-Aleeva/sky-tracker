@@ -8,10 +8,10 @@
 
 <nav class="menu">
     <a href="{{ url_for('index') }}">Другая страна</a>
-    <a href="#">Фильтр по стране вылета</a>
+<a href="{{ url_for('filter_country', country=country) }}">Фильтр по стране вылета</a>
     <a href="{{ url_for('leaders', country=country) }}">Топ-лидеры</a>
-    <a href="#">Топ-N по высоте</a>
-    <a href="#">Топ-N по скорости</a>
+    <a href="{{ url_for('top_altitude', country=country) }}">Топ-N по высоте</a>
+    <a href="{{ url_for('top_velocity', country=country) }}">Топ-N по скорости</a>
     <a href="#">В воздухе</a>
     <a href="#">На земле</a>
     <a href="#">Спецрейсы (SPI)</a>
