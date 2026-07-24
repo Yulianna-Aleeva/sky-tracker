@@ -111,5 +111,32 @@ def top_velocity() -> str:
     return render_template("top.html", country=country, n=n, planes=top, mode="velocity")
 
 
+@app.route("/stats/<mode>", methods=["GET"])
+def stats(mode: str) -> str:
+    """Статистика: в воздухе / на земле / спецрейсы."""
+    country = request.args.get("country", "").strip()
+    planes = _load_planes(country)
+
+    modes = {
+        "in_air": ("В воздухе", lambda p: not p.on_ground),
+        "on_ground": ("На земле", lambda p: p.on_ground),
+        "spi": ("Спецрейсы (SPI)", lambda p: p.spi),
+    }
+    label, check = modes.get(mode, ("Неизвестно", lambda p: False))
+
+    total = len(planes)
+    count = sum(1 for p in planes if check(p))
+    percent = (count / total * 100) if total else 0
+
+    return render_template(
+        "stats.html",
+        country=country,
+        label=label,
+        count=count,
+        total=total,
+        percent=percent,
+    )
+
+
 if __name__ == "__main__":
     app.run(debug=True)
