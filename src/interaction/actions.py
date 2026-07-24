@@ -66,7 +66,7 @@ def action_load_planes(filters: dict) -> list[Aeroplane] | None:
 def action_top_altitude(planes: list[Aeroplane], filters: dict) -> None:
     """Показывает топ-N самолётов по высоте (по убыванию)."""
     if not planes:
-        print(Msg.NO_DATA)
+        print(Msg.EMPTY_SKY)
         return
 
     if filters.get("top_altitude") is not None:
@@ -103,7 +103,7 @@ def action_top_altitude(planes: list[Aeroplane], filters: dict) -> None:
 def action_top_velocity(planes: list[Aeroplane], filters: dict) -> None:
     """Показывает топ-N самолётов по скорости (по убыванию)."""
     if not planes:
-        print(Msg.NO_DATA)
+        print(Msg.EMPTY_SKY)
         return
 
     if filters.get("top_velocity") is not None:
@@ -140,7 +140,7 @@ def action_top_velocity(planes: list[Aeroplane], filters: dict) -> None:
 def action_filter_country(planes: list[Aeroplane], filters: dict) -> None:
     """Фильтрует самолёты по стране регистрации (origin_country)."""
     if not planes:
-        print(Msg.NO_DATA)
+        print(Msg.EMPTY_SKY)
         return
 
     if filters.get("reg_country") is None:
@@ -180,7 +180,7 @@ def action_filter_country(planes: list[Aeroplane], filters: dict) -> None:
 def action_leaders(planes: list[Aeroplane]) -> None:
     """Показывает топ-лидеров (быстрый / высокий / крутой)."""
     if not planes:
-        print(Msg.NO_DATA)
+        print(Msg.EMPTY_SKY)
         return
     show_leaders(planes)
 
@@ -188,7 +188,7 @@ def action_leaders(planes: list[Aeroplane]) -> None:
 def action_stats_in_air(planes: list[Aeroplane]) -> None:
     """Статистика: сколько в воздухе."""
     if not planes:
-        print(Msg.NO_DATA)
+        print(Msg.EMPTY_SKY)
         return
     show_statistics(planes, "in_air")
 
@@ -196,7 +196,7 @@ def action_stats_in_air(planes: list[Aeroplane]) -> None:
 def action_stats_on_ground(planes: list[Aeroplane]) -> None:
     """Статистика: сколько на земле."""
     if not planes:
-        print(Msg.NO_DATA)
+        print(Msg.EMPTY_SKY)
         return
     show_statistics(planes, "on_ground")
 
@@ -204,21 +204,21 @@ def action_stats_on_ground(planes: list[Aeroplane]) -> None:
 def action_stats_spi(planes: list[Aeroplane]) -> None:
     """Статистика: спецрейсы (SPI)."""
     if not planes:
-        print(Msg.NO_DATA)
+        print(Msg.EMPTY_SKY)
         return
     show_statistics(planes, "spi")
 
 
 def action_show_all(planes: list[Aeroplane]) -> None:
-    """Показывает все сохранённые: сводка (+) или таблица (-)."""
+    """Показывает все сохранённые: список (+) или таблица (-)."""
     if not planes:
-        print(Msg.NO_DATA)
+        print(Msg.EMPTY_SKY)
         return
 
     choice = input(Msg.VIEW_MODE).strip()
-    if choice == Msg.YES:
-        show_summary(planes)
-    elif choice == Msg.NO:
+    if choice == "+":
         show_aeroplanes_table(planes)
+    elif choice == "-":
+        show_summary(planes)
     else:
         print(Msg.INVALID)

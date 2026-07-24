@@ -126,35 +126,3 @@ def show_menu(filters: dict) -> None:
     print("* - Обнулить все фильтры")
     print("/ - Помощь / Инструкция")
     print("0 - Выход")
-
-
-# === ПРОВЕРКА КОДА ===
-if __name__ == "__main__":
-    from src.api.api_adapter import ApiAdapter
-
-    api = ApiAdapter()
-    raw = api.get_aeroplanes("Switzerland")
-    planes = Aeroplane.cast_to_object_list(raw or [])
-
-    print("\n--- ТАБЛИЦА ---")
-    show_aeroplanes_table(planes[:5])
-
-    print("\n--- СВОДКА ---")
-    show_summary(planes)
-
-    print("\n--- СТАТИСТИКА ---")
-    show_statistics(planes, "in_air")
-    show_statistics(planes, "on_ground")
-    show_statistics(planes, "spi")
-
-    print("\n--- ЛИДЕРЫ ---")
-    show_leaders(planes)
-
-    print("\n--- ПОМОЩЬ ---")
-    show_help()
-
-    print("\n--- МЕНЮ (пустое) ---")
-    show_menu({})
-
-    print("\n--- МЕНЮ (с фильтрами) ---")
-    show_menu({"country": "Italy", "reg_country": "France", "top_altitude": 7})

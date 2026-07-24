@@ -35,6 +35,11 @@ class ApiAdapter(BaseAPI):
 
     def _get_coordinates(self, country: str) -> list[float] | None:
         """Получает координаты (bounding box) страны."""
+        # Если координаты не найдены, логируем предупреждение и возвращаем сохранённые координаты
+        if not self.geo_url:
+            logger.warning(Msg.COORD_NF.format(country=country))
+            return self._get_saved_coords(country)
+
         params: dict[str, str | int] = {"country": country, "format": "json", "limit": 1}
         # Отправляем запрос к гео‑API (с таймаутом), если код вернул ошибку → except
         try:
