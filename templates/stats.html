@@ -9,6 +9,33 @@
     <h3>{{ label }}</h3>
     <p><b>{{ count }}</b> из {{ total }} ({{ '%.1f'|format(percent) }}%)</p>
 </div>
+
+{% if planes %}
+<table>
+    <thead>
+        <tr>
+            <th>ICAO24</th>
+            <th>Позывной</th>
+            <th>Страна</th>
+            <th>Высота, м</th>
+            <th>Скорость, м/с</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in planes %}
+        <tr>
+            <td>{{ p.icao24 or '-' }}</td>
+            <td>{{ p.callsign or '-' }}</td>
+            <td>{{ p.origin_country or '-' }}</td>
+            <td>{{ '%.1f'|format(p.baro_altitude) if p.baro_altitude is not none else '-' }}</td>
+            <td>{{ '%.1f'|format(p.velocity) if p.velocity is not none else '-' }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>Ни одного самолёта в этой категории.</p>
+{% endif %}
 {% else %}
 <p>Нет данных.</p>
 {% endif %}

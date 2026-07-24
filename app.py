@@ -113,7 +113,7 @@ def top_velocity() -> str:
 
 @app.route("/stats/<mode>", methods=["GET"])
 def stats(mode: str) -> str:
-    """Статистика: в воздухе / на земле / спецрейсы."""
+    """Статистика: in_air / on_ground / spi."""
     country = request.args.get("country", "").strip()
     planes = _load_planes(country)
 
@@ -124,8 +124,9 @@ def stats(mode: str) -> str:
     }
     label, check = modes.get(mode, ("Неизвестно", lambda p: False))
 
+    filtered = [p for p in planes if check(p)]
     total = len(planes)
-    count = sum(1 for p in planes if check(p))
+    count = len(filtered)
     percent = (count / total * 100) if total else 0
 
     return render_template(
@@ -135,6 +136,7 @@ def stats(mode: str) -> str:
         count=count,
         total=total,
         percent=percent,
+        planes=filtered,
     )
 
 
