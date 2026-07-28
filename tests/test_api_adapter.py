@@ -125,13 +125,15 @@ def test_get_aeroplanes_bad_response_returns_none(mock_get: Mock, api: ApiAdapte
 
 
 @patch("src.api.api_adapter.requests.get")
-def test_get_aeroplanes_network_error_returns_none(mock_get: Mock, api: ApiAdapter) -> None:
-    """Если ошибка сети у OpenSky → None."""
-    mock_get.side_effect = [
-        make_response([{"boundingbox": ["1", "2", "3", "4"]}]),
-        requests.RequestException("timeout"),
-    ]
-    assert api.get_aeroplanes("Testland") is None
+def test_get_aeroplanes_network_error_raises(mock_get: Mock, api: ApiAdapter) -> None:
+    """Если ошибка сети у OpenSky → пробрасывается RequestException после 3 попыток (retry)."""
+    # Мокаем _get_coordinates, чтобы не тратить моки requests.get на geo
+    with patch.object(api, "_get_coordinates", return_value=[1.0, 2.0, 3.0, 4.0]):
+        mock_get.side_effect = requests.RequestException("timeout")
+        with pytest.raises(requests.RequestException):
+            api.get_aeroplanes("Testland")
+    # Проверяем, что было 3 попытки
+    assert mock_get.call_count == 3
 
 
 @patch("src.api.api_adapter.requests.get")
@@ -151,3 +153,9 @@ def test_get_saved_coords(api):
         assert api._get_saved_coords("TestCountry") == [10.0, 20.0, 30.0, 40.0]
         # Несуществующая страна
         assert api._get_saved_coords("Unknown") is None
+
+
+@pytest.fixture(autouse=True)
+def _no_retry_wait(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Отключает задержку между попытками retry в тестах этого файла."""
+    monkeypatch.setattr(ApiAdapter.get_aeroplanes.retry, "wait", lambda *a, **kw: 0)

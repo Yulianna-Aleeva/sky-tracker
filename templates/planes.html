@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Самолёты: {{ country }}</h2>
+
+{% if planes %}
+<p>Найдено: {{ planes|length }}</p>
+
+<nav class="menu">
+    <a href="{{ url_for('index') }}">Другая страна</a>
+<a href="{{ url_for('filter_country', country=country) }}">Фильтр по стране вылета</a>
+    <a href="{{ url_for('leaders', country=country) }}">Топ-лидеры</a>
+    <a href="{{ url_for('top_altitude', country=country) }}">Топ-N по высоте</a>
+    <a href="{{ url_for('top_velocity', country=country) }}">Топ-N по скорости</a>
+    <a href="{{ url_for('stats', mode='in_air', country=country) }}">В воздухе</a>
+    <a href="{{ url_for('stats', mode='on_ground', country=country) }}">На земле</a>
+    <a href="{{ url_for('stats', mode='spi', country=country) }}">Спецрейсы (SPI)</a>
+</nav>
+
+<table>
+    <thead>
+        <tr>
+            <th>ICAO24</th>
+            <th>Позывной</th>
+            <th>Страна</th>
+            <th>Высота, м</th>
+            <th>Скорость, м/с</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in planes %}
+        <tr>
+            <td>{{ p.icao24 or '-' }}</td>
+            <td>{{ p.callsign or '-' }}</td>
+            <td>{{ p.origin_country or '-' }}</td>
+            <td>{{ '%.1f'|format(p.baro_altitude) if p.baro_altitude is not none else '-' }}</td>
+            <td>{{ '%.1f'|format(p.velocity) if p.velocity is not none else '-' }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>Нет данных.</p>
+{% endif %}
+
+<p><a href="{{ url_for('index') }}">← На главную</a></p>
+{% endblock %}

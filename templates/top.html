@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% set title = "высоте" if mode == "altitude" else "скорости" %}
+{% set url = url_for('top_altitude') if mode == "altitude" else url_for('top_velocity') %}
+
+<h2>Топ-N по {{ title }}: {{ country }}</h2>
+<p><a href="{{ url_for('planes_back', country=country) }}">← К списку самолётов</a></p>
+
+<form action="{{ url }}" method="get">
+    <input type="hidden" name="country" value="{{ country }}">
+    <input type="number" name="n" min="1" placeholder="Введите N" value="{{ n or '' }}" required>
+    <button type="submit">Показать</button>
+</form>
+
+{% if planes %}
+<p>Топ-{{ n }}:</p>
+<table>
+    <thead>
+        <tr>
+            <th>ICAO24</th>
+            <th>Позывной</th>
+            <th>Страна</th>
+            <th>Высота, м</th>
+            <th>Скорость, м/с</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in planes %}
+        <tr>
+            <td>{{ p.icao24 or '-' }}</td>
+            <td>{{ p.callsign or '-' }}</td>
+            <td>{{ p.origin_country or '-' }}</td>
+            <td>{{ '%.1f'|format(p.baro_altitude) if p.baro_altitude is not none else '-' }}</td>
+            <td>{{ '%.1f'|format(p.velocity) if p.velocity is not none else '-' }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+<p><a href="{{ url_for('planes_back', country=country) }}">← К списку самолётов</a></p>
+{% endblock %}
