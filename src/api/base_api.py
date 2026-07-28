@@ -8,4 +8,4 @@ class BaseAPI(ABC):
     @abstractmethod
     def get_aeroplanes(self, country: str) -> list[dict[str, Any]] | None:
         """Получает информацию о самолётах по названию страны."""
-        pass
+        ...

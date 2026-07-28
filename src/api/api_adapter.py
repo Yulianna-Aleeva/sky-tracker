@@ -4,7 +4,7 @@ import requests
 
 from src.api.base_api import BaseAPI
 from src.config import USER_SETTINGS, get_logger
-from src.constants.messages import ApiMsg
+from src.constants.messages import Msg
 
 logger = get_logger(__name__)
 
@@ -35,6 +35,11 @@ class ApiAdapter(BaseAPI):
 
     def _get_coordinates(self, country: str) -> list[float] | None:
         """Получает координаты (bounding box) страны."""
+        # Если координаты не найдены, логируем предупреждение и возвращаем сохранённые координаты
+        if not self.geo_url:
+            logger.warning(Msg.COORD_NF.format(country=country))
+            return self._get_saved_coords(country)
+
         params: dict[str, str | int] = {"country": country, "format": "json", "limit": 1}
         # Отправляем запрос к гео‑API (с таймаутом), если код вернул ошибку → except
         try:
@@ -44,7 +49,7 @@ class ApiAdapter(BaseAPI):
 
             # Если API не вернул данные, используем координаты из настроек
             if not isinstance(data, list) or not data or not isinstance(data[0], dict):
-                logger.warning(ApiMsg.COORD_NF.format(country=country))
+                logger.warning(Msg.COORD_NF.format(country=country))
                 return self._get_saved_coords(country)
 
             # Возвращаем первый результат и его bounding box
@@ -55,7 +60,7 @@ class ApiAdapter(BaseAPI):
 
         # Если сетевая ошибка или недоступно API, используем координаты из настроек
         except requests.RequestException as e:
-            logger.error(f"{ApiMsg.REQ_ERR.format(url=self.geo_url)}: {e}")
+            logger.error(f"{Msg.REQ_ERR.format(url=self.geo_url)}: {e}")
             return self._get_saved_coords(country)
 
     def get_aeroplanes(self, country: str) -> list[Any] | None:
@@ -82,22 +87,22 @@ class ApiAdapter(BaseAPI):
             data = response.json()
 
             if not isinstance(data, dict):
-                logger.warning(ApiMsg.RESP_ERR.format(country=country))
+                logger.warning(Msg.RESP_ERR.format(country=country))
                 return None
 
             states = data.get("states")
             # Если None, например, в небе над страной сейчас нет отслеживаемых бортов
             if states is None:
-                logger.warning(ApiMsg.PLANES_NF.format(country=country))
+                logger.warning(Msg.PLANES_NF.format(country=country))
                 return []
 
             planes: list[list[Any]] = [cast(list[Any], state) for state in states if isinstance(state, list)]
 
             # Успешный возврат списка самолётов
-            logger.info(ApiMsg.PLANES_OK.format(country=country))
+            logger.info(Msg.PLANES_OK.format(country=country))
             return planes
 
         # Если OpenSky API недоступно
         except requests.RequestException as e:
-            logger.error(f"{ApiMsg.REQ_ERR.format(url=self.sky_url)}: {e}")
+            logger.error(f"{Msg.REQ_ERR.format(url=self.sky_url)}: {e}")
             return None

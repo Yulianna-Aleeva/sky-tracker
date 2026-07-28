@@ -1,10 +1,41 @@
-class ApiMsg:  # Сообщения для API
-    REQ_ERR = "Ошибка при запросе к API: {url}"  # API_REQUEST_ERROR
-    RESP_ERR = "Ошибка ответа API для {country}"  # RESPONSE ERROR
-    COORD_NF = "Координаты для страны {country} не найдены."  # COORDINATES_NOT_FOUND
-    PLANES_NF = "В воздушном пространстве {country} самолёты не найдены."  # NO_AEROPLANES_FOUND
-    PLANES_OK = "Успешно получены данные о самолётах для {country}."  # SUCCESS_AEROPLANES
+class Msg:
+    # === API ===
+    REQ_ERR = "Ошибка при запросе к API: {url}."
+    RESP_ERR = "Ошибка ответа API для {country}."
+    COORD_NF = "Координаты для страны {country} не найдены."
+    PLANES_NF = "В воздушном пространстве {country} самолёты не найдены."
+    PLANES_OK = "Успешно получены данные о самолётах для {country}."
 
+    # === Ошибки ===
+    COMPARE_ERR = "Сравнивать можно только объекты Aeroplane."
+    READ_ERR = "Ошибка чтения файла: {e}."
+    LOAD_ERR = "Ошибка загрузки данных."
 
-class ErrorMsg:  # Сообщения об ошибках
-    COMPARE_ERR = "Сравнивать можно только объекты Aeroplane"
+    # === Управляющие символы ===
+    CUSTOM = "0"  # свой ввод
+    YES = "+"
+    NO = "-"
+    BACK = "/"  # назад
+    RESET = "*"  # сброс фильтра
+    EXIT = "0"  # выход
+
+    # === Ответы системы ===
+    RESET_OK = "Все фильтры сброшены."
+    NO_DATA = "Нет данных для вывода."
+    EMPTY_SKY = "Над выбранным воздушным пространством отсутствуют самолёты."
+    INVALID = "Неверный ввод. Попробуйте снова."
+    NOT_FOUND = "Ничего не найдено."
+    LOADED_OK = "Загружено самолётов: {count}"
+    GOOD_BYE = "До встречи!"
+
+    # === Приглашения ===
+    WELCOME = "\n=== Добро пожаловать в SKY TRACKER! ==="
+    COUNTRY_TITLE = "\nВыберите страну или город для анализа:"
+    CHOICE = "> Ваш выбор: "
+    COUNTRY_PROMPT = "> Выберите страну: "
+    CUSTOM_COUNTRY = "> Введите название страны: "
+    TOP_N = "> Сколько самолётов вывести в ТОП? "
+    FILTER_COUNTRY = "> Страна регистрации: "
+    VIEW_MODE = "> Показать список (+) или сводную таблицу (-)? "
+    CURRENT_FILTER = "Текущий фильтр: {value}"
+    NEW_TOP_N = "> Введите новое значение, {reset} — сбросить, {back} — назад: "
