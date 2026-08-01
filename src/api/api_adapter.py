@@ -1,12 +1,22 @@
+import os
 from typing import Any, cast
 
 import requests
+from tenacity import (
+    retry,
+    retry_if_exception_type,
+    stop_after_attempt,
+    wait_exponential_jitter,
+)
 
 from src.api.base_api import BaseAPI
 from src.config import USER_SETTINGS, get_logger
 from src.constants.messages import Msg
 
 logger = get_logger(__name__)
+
+OPENSKY_USER = os.getenv("OPENSKY_USER")
+OPENSKY_PASS = os.getenv("OPENSKY_PASS")
 
 
 class ApiAdapter(BaseAPI):
@@ -34,7 +44,7 @@ class ApiAdapter(BaseAPI):
         return self._to_bbox(save_coords)
 
     def _get_coordinates(self, country: str) -> list[float] | None:
-        """Получает координаты (bounding box) страны."""
+        """Получает координаты (bounding box) страны через Nominatim."""
         # Если координаты не найдены, логируем предупреждение и возвращаем сохранённые координаты
         if not self.geo_url:
             logger.warning(Msg.COORD_NF.format(country=country))
@@ -63,6 +73,12 @@ class ApiAdapter(BaseAPI):
             logger.error(f"{Msg.REQ_ERR.format(url=self.geo_url)}: {e}")
             return self._get_saved_coords(country)
 
+    @retry(
+        stop=stop_after_attempt(3),
+        wait=wait_exponential_jitter(initial=1, max=5, jitter=1),
+        retry=retry_if_exception_type(requests.RequestException),
+        reraise=True,
+    )
     def get_aeroplanes(self, country: str) -> list[Any] | None:
         """Получает список самолётов в воздушном пространстве страны."""
         # Узнаём координаты страны
@@ -80,9 +96,17 @@ class ApiAdapter(BaseAPI):
             "lomax": max_lon,  # восток
         }
 
+        # Авторизация OpenSky (если задана в .env)
+        auth = (OPENSKY_USER, OPENSKY_PASS) if OPENSKY_USER and OPENSKY_PASS else None
         try:
             # Запрос к OpenSky API с координатами
-            response = requests.get(self.sky_url, params=params, timeout=10)
+            response = requests.get(
+                self.sky_url,
+                params=params,
+                headers=self.headers,
+                timeout=10,
+                auth=auth,
+            )
             response.raise_for_status()
             data = response.json()
 
@@ -102,7 +126,7 @@ class ApiAdapter(BaseAPI):
             logger.info(Msg.PLANES_OK.format(country=country))
             return planes
 
-        # Если OpenSky API недоступно
+        # Если OpenSky API недоступно — пробрасываем, чтобы сработал retry
         except requests.RequestException as e:
             logger.error(f"{Msg.REQ_ERR.format(url=self.sky_url)}: {e}")
-            return None
+            raise
