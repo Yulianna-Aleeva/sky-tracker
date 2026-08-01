@@ -41,15 +41,24 @@ poetry install
 
 
 ## Настройка
-Файл `.env` уже входит в проект.
+Создайте файл `.env`:
+> Укажите путь к JSON-файлу с данными о самолётах:
+>> FILE_PATH=___ваш путь к файлу___
 
-В `user_settings.json` находятся:
+> Введите ваши данные от OpenSky Network:  
+https://opensky-network.org/
+>> OPENSKY_USER=your_api_user_here  
+>> OPENSKY_PASS=your_api_password_here
+
+
+В [user_settings.json](user_settings.json) находятся:
 - `geo_url` — Nominatim API для определения координат;
 - `sky_url` — OpenSky API для получения самолётов;
 - `user_countries` — список стран и городов в меню;
 - `country_coordinates` — резервные координаты `[min_lat, max_lat, min_lon, max_lon]`.
 
-Если Nominatim недоступен, программа автоматически использует фиксированные координаты из `user_settings.json`.
+Если Nominatim недоступен, программа автоматически использует фиксированные координаты из [user_settings.json](user_settings.json).  
+Вы можете дополнять свои координаты и удалять не нужные.
 
 
 ## Запуск приложения
