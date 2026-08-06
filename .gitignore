@@ -215,3 +215,5 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 /database.ini
+aeroplanes.json
+/src/logs/
