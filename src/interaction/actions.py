@@ -24,11 +24,18 @@ def action_load_planes(filters: dict) -> list[Aeroplane] | None:
     """Загружает самолёты по стране (из списка или свой ввод)."""
     countries = USER_SETTINGS.get("user_countries", [])
     print(Msg.COUNTRY_TITLE)
+
+    print("  -. Аналитика PostgreSQL (СУБД)")
+
     for i, country in enumerate(countries, 1):
         print(f"  {i}. {country}")
     print(f"  {Msg.CUSTOM}. Свой ввод")
 
     choice = input(Msg.CHOICE).strip()
+
+    if choice == "-":
+        filters["db_analytics"] = True
+        return []
 
     if choice == Msg.CUSTOM:
         country = input(Msg.CUSTOM_COUNTRY).strip()

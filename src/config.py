@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import sys
+from configparser import ConfigParser
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -63,3 +64,20 @@ def get_logger(name_file: str) -> logging.Logger:
         logger.addHandler(handler)
 
     return logger
+
+
+def get_db_config(filename: str = "database.ini", section: str = "postgresql") -> dict:
+    """Читает настройки подключения к базе данных из файла ini."""
+    # Создаем полный путь к файлу database.ini в корне проекта
+    ini_path = BASE_DIR / filename
+
+    parser = ConfigParser()
+    parser.read(ini_path, encoding="utf-8")
+
+    # Проверяем, есть ли нужная секция (PostgreSQL) в файле
+    if parser.has_section(section):
+        params = parser.items(section)
+        # Превращаем список кортежей в словарь
+        return {param[0]: param[1] for param in params}
+
+    raise Exception(f"Секция {section} не найдена в файле {ini_path}")

@@ -13,6 +13,7 @@ from src.interaction.actions import (
     apply_filters,
 )
 from src.interaction.display import show_help, show_menu
+from src.interaction.db_actions import run_db_analytics
 
 
 def run_menu() -> None:
@@ -28,6 +29,7 @@ def run_menu() -> None:
         return
     planes = result
 
+    # Главное меню
     while True:
         show_menu(filters)
         choice = input(Msg.CHOICE).strip()
