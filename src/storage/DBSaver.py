@@ -58,7 +58,6 @@ class DBSaver:
                     (country, lat, lon),
                 )
 
-
     def update_aeroplanes_online(self) -> None:
         """Загружает текущие самолеты из OpenSky и привязывает их к странам."""
         logger.info("Обновление данных о самолетах в воздухе...")
