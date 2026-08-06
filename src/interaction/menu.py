@@ -12,6 +12,7 @@ from src.interaction.actions import (
     action_top_velocity,
     apply_filters,
 )
+from src.interaction.db_actions import run_db_analytics
 from src.interaction.display import show_help, show_menu
 
 
@@ -21,13 +22,25 @@ def run_menu() -> None:
     filters: dict = {}
 
     print(Msg.WELCOME)
-    # Обязательный первый шаг — выбор страны
-    result = action_load_planes(filters)
-    if result is None:
-        print(Msg.GOOD_BYE)
-        return
-    planes = result
 
+    while True:
+        result = action_load_planes(filters)
+
+        # Если пользователь ввёл неверный пункт или нажал отмену/выход
+        if result is None:
+            print(Msg.GOOD_BYE)
+            return
+
+        # ПРОВЕРЯЕМ ФЛАГ НАЖАТИЯ МИНУСА
+        if filters.get("db_analytics") is True:
+            filters.clear()  # Полностью чистим временный флаг
+            run_db_analytics()  # Запускаем SQL-меню
+            continue  # После выхода из SQL-меню (0) отправляем обратно на выбор городов
+
+        planes = result
+        break
+
+    # Главное меню
     while True:
         show_menu(filters)
         choice = input(Msg.CHOICE).strip()

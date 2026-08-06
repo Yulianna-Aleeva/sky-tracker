@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-3">📊 Глобальная аналитика PostgreSQL</h1>
+
+    <!-- Фиксированный отступ снизу -->
+    <div style="margin-bottom: 2.5rem; display: block; clear: both;">
+        <a href="/" class="btn btn-sm btn-outline-secondary shadow-sm">⬅️ На главную</a>
+    </div>
+
+    <!-- Блок 1: Средняя скорость -->
+    <div class="card p-4 mb-4 shadow-sm">
+        <h2>✈️ Средняя скорость всех самолетов в воздухе</h2>
+        <p class="h3 text-success font-weight-bold">{{ avg_speed }} м/с</p>
+    </div>
+
+    <!-- Блок 2: Самолеты по странам -->
+    <div class="card p-4 mb-4 shadow-sm">
+        <h2>🌍 Количество самолетов по регионам</h2>
+        <table class="table table-bordered table-striped mt-3">
+            <thead class="thead-light">
+                <tr>
+                    <th>Страна / Город</th>
+                    <th>Самолетов в небе</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in countries_count %}
+                <tr>
+                    <td>{{ row[0] }}</td>
+                    <td><strong>{{ row[1] }}</strong></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Блок 3: Быстрые самолеты -->
+    <div class="card p-4 mb-4 shadow-sm">
+        <h2>⚡ Топ-10 самолетов со скоростью выше средней</h2>
+        <table class="table table-bordered table-striped mt-3">
+            <thead class="thead-light">
+                <tr>
+                    <th>ICAO24</th>
+                    <th>Позывной</th>
+                    <th>Скорость (м/с)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in fast_planes %}
+                <tr>
+                    <td>{{ p[0] }}</td>
+                    <td>{{ p[1] }}</td>
+                    <td>{{ p[2] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

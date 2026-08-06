@@ -7,7 +7,8 @@ from flask.typing import ResponseReturnValue
 
 from src.api.api_adapter import ApiAdapter
 from src.classes.aeroplane import Aeroplane
-from src.config import USER_SETTINGS
+from src.classes.db_manager import DBManager
+from src.config import USER_SETTINGS, get_db_config
 
 app = Flask(__name__)
 api = ApiAdapter()
@@ -150,5 +151,20 @@ def stats(mode: str) -> ResponseReturnValue:
     )
 
 
-if __name__ == "__main__":
+@app.route("/db-analytics", methods=["GET"])
+def db_analytics() -> ResponseReturnValue:
+    """Страница глобальной аналитики из базы данных PostgreSQL."""
+    db_params = get_db_config()
+    manager = DBManager(db_params)
+
+    countries_count = manager.get_countries_and_aeroplanes_count()
+    avg_speed = manager.get_avg_speed()
+    fast_planes = manager.get_aeroplanes_with_higher_speed()[:10]  # Топ-10
+
+    return render_template(
+        "db_analytics.html", countries_count=countries_count, avg_speed=round(avg_speed, 2), fast_planes=fast_planes
+    )
+
+
+if __name__ == "__main__":  # pragma: no cover
     app.run(debug=True)
